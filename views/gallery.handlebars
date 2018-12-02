@@ -1,0 +1,26 @@
+<!-- The Modal -->
+<div class="modal">
+
+  <!-- The Close Button -->
+  <span class="close">&times;</span>
+
+  <!-- Modal Content (The Image) -->
+  <img class="modal-content" id="img01">
+</div>
+
+<div class="gallery-container">
+    <div class="main-viewer">
+      <img class="main-img" src="{{proofs.0.imageURL}}" alt="Proof">
+      <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+      <a class="next" onclick="plusSlides(1)">&#10095;</a>
+    </div>
+  <div class="thumbnails">
+  {{#each proofs}}
+    <div class="thumbnail-img-wrapper">
+      <img class="thumbnail-img" src="{{imageURL}}">
+    </div>
+  {{/each}}
+  </div>
+</div>
+
+<script src="/gallery.js"></script>
