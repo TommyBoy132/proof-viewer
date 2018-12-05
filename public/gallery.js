@@ -1,38 +1,56 @@
 const current = document.querySelector('.main-img');
 const imgs = document.querySelector('.thumbnails');
-const img = document.querySelectorAll('.thumbnail-img');
-const opacity = 0.6;
+const img = [].slice.call(document
+    .querySelectorAll('.thumbnail-img'));
 const modal = document.querySelector('.modal');
 const modalImg = document.querySelector('.modal-content');
 let imgNumber = 0;
+const span = document.querySelector('.close');
 
-// Set first img opacity
-img[0].classList.add('selected-img');
+function keyPress(targetKey){
+  console.log(targetKey);
+  switch (targetKey){
+    case "ArrowRight":
+      plusSlides(1);
+      break;
+    case "ArrowLeft":
+      plusSlides(-1);
+      break;
+    case "Enter":
+      if(modal.style.display === "block"){
+        hideModal();
+      } else {
+        showModal(document.querySelector('.selected-img').src);
+      }
+      break;
+    default:
+      break;
+}}
 
-imgs.addEventListener('click', imgClick);
-console.log(img);
+function setModal(src){
+  modalImg.src = src;
+}
 
-current.addEventListener('click', (e) =>{
-  console.log(e.target.src);
+function showModal(){
   modal.style.display = "block";
-  modalImg.src = e.target.src;
-});
+}
 
 function imgClick(e) {
   if(e.target.src){
-    img.forEach(img => {
-      img.classList.remove('selected-img');
-    });
-  // Change current image to src of clicked image
-    current.src = e.target.src;
-    // Add fade in class
+    newCurrentImage(e.target);
     current.classList.add('fade-in');
-    // Remove fade-in class after .5 seconds
     setTimeout(() => current.classList.remove('fade-in'), 500);
-    // Change the opacity to opacity var
-    e.target.classList.add('selected-img');
-    console.log(e.target);
+    imgNumber = img.indexOf(e.target);
   }
+}
+
+function newCurrentImage(targetImg){
+  img.forEach(img => {
+    img.classList.remove('selected-img');
+  });
+  current.src = targetImg.src;
+  targetImg.classList.add('selected-img');
+  setModal(targetImg.src);
 }
 
 function plusSlides(x) {
@@ -43,14 +61,26 @@ function plusSlides(x) {
   if (imgNumber >= img.length){
     imgNumber = 0;
   }
-  img.forEach(img => {
-    img.classList.remove('selected-img');
-  });
-  current.src = img[imgNumber].src;
-  img[imgNumber].classList.add('selected-img');
+  newCurrentImage(img[imgNumber]);
 }
 
-var span = document.querySelector('.close');
-span.onclick = () => {
+function hideModal() {
   modal.style.display = "none";
+}
+
+span.onclick = () => {
+  hideModal();
 };
+
+img[0].classList.add('selected-img');
+
+imgs.addEventListener('click', imgClick);
+
+current.addEventListener('click', (e) =>{
+  setModal(e.target.src);
+  showModal();
+});
+
+document.addEventListener('keydown', (event) => {
+      keyPress(event.code);
+});
